@@ -175,6 +175,16 @@ Start Postgres:
 docker run --name taskdb -e POSTGRES_PASSWORD=dev -e POSTGRES_DB=tasks -p 5432:5432 -v taskdata:/var/lib/postgresql -d postgres
 
 
+## LLM API
+
+This project integrates an LLM using the OpenAI-compatible SDK.
+
+The LLM provider and model are configurable through environment
+variables (`LLM_BASE_URL`, `LLM_API_KEY`, and `LLM_MODEL`),
+allowing compatible providers to be switched without changing
+application code.
+
+
 
 
 

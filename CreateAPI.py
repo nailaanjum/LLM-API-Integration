@@ -1,3 +1,5 @@
+from fastapi import Request
+from fastapi.exceptions import RequestValidationError
 from fastapi import FastAPI
 from fastapi.responses import JSONResponse, Response
 from pydantic import BaseModel
@@ -5,7 +7,12 @@ from repository import get_connection, initialize_database
 import os
 from contextlib import asynccontextmanager
 
-app = FastAPI()
+from dotenv import load_dotenv
+
+from src.routes.triage import router as triage_router
+
+
+load_dotenv()
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -13,8 +20,25 @@ async def lifespan(app: FastAPI):
     yield
     # (optional: cleanup code goes here, runs on shutdown)
 
-app = FastAPI(lifespan=lifespan)
 
+app = FastAPI(lifespan=lifespan)
+app.include_router(triage_router)
+
+@app.exception_handler(RequestValidationError)
+async def validation_exception_handler(
+    request: Request,
+    exc: RequestValidationError
+):
+    return JSONResponse(
+        status_code=400,
+        content={
+            "message": "Invalid input",
+            "fields": [
+                str(error["loc"][-1])
+                for error in exc.errors()
+            ]
+        }
+    )
 
 # Data model for creating a task
 class TaskCreate(BaseModel):
