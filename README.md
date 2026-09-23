@@ -185,6 +185,45 @@ allowing compatible providers to be switched without changing
 application code.
 
 
+## Stage 2 — Prompt v1 and real LLM
+
+The `/triage` endpoint was connected to the local Gemma model through Ollama.
+
+The system prompt is stored separately in:
+
+`prompts/triage-v1.md`
+
+The prompt is loaded at runtime and sent as the `system` message. The customer's support message is sent separately as the `user` message and is JSON-encoded before being sent to the model.
+
+Temperature was set to `0` to reduce unnecessary variation in classification results.
+
+### Test inputs
+
+1. Billing:
+   `I was charged twice for my subscription.`
+
+2. Bug:
+   `The dashboard crashes every time I try to open it.`
+
+3. Ambiguous:
+   `Something is wrong with my account.`
+
+### Observations
+
+The model generally followed the requested JSON structure and used the categories defined in the prompt. The exact wording of the `reason` field and the confidence value can vary between model responses.
+
+The ambiguous input was useful for checking whether the model followed the instruction to use `other` with low confidence instead of guessing.
+
+The prompt is kept separate from user content so that untrusted input is not inserted into the system instructions. This also provides a basic defense against prompt injection.
+
+### Stage 2 result
+
+The endpoint successfully returned real responses from Gemma with `LLM_STUB=0`.
+
+The versioned prompt is stored in `prompts/triage-v1.md`.
+
+
+
 
 
 
