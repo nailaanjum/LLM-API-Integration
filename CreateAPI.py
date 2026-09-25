@@ -8,11 +8,10 @@ import os
 from contextlib import asynccontextmanager
 
 from dotenv import load_dotenv
+load_dotenv()
 
 from src.routes.triage import router as triage_router
 
-
-load_dotenv()
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
