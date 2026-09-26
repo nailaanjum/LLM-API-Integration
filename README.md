@@ -223,6 +223,29 @@ The endpoint successfully returned real responses from Gemma with `LLM_STUB=0`.
 The versioned prompt is stored in `prompts/triage-v1.md`.
 
 
+## Retry policy
+
+We disable the SDK's own default retries and implement our own: up to 2 retries,
+only on timeouts, 429, and 5xx responses, using exponential backoff (1s, 2s, 4s)
+plus jitter, and honoring `Retry-After` when the provider sends one. 400, 401,
+and 403 are never retried — they are permanent failures for that specific request,
+and retrying them would only waste quota.
+
+### Note on testing the no-retry-on-401 behavior
+
+Our provider for this project is local Ollama (`http://localhost:11434`), which
+does not enforce API key validation — it accepts any value for `LLM_API_KEY`,
+including an intentionally invalid one, and still processes the request
+successfully. This means we could not observe a real `401` end-to-end against
+our own running provider.
+
+The retry logic itself explicitly excludes `400`, `401`, and `403` from the
+retry loop (see `call_model` in `src/routes/triage.py`) and only retries on
+`APITimeoutError`, `RateLimitError`, and 5xx `APIStatusError`s. This exclusion
+was verified by code inspection rather than a live 401 from our provider.
+With another day, we'd temporarily point the client at a hosted provider like
+OpenRouter (which does enforce real keys) to observe a genuine 401 and confirm
+the no-retry path end-to-end.
 
 
 

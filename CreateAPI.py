@@ -10,6 +10,13 @@ from contextlib import asynccontextmanager
 from dotenv import load_dotenv
 load_dotenv()
 
+import logging
+
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s %(name)s %(message)s"
+)
+
 from src.routes.triage import router as triage_router
 
 
