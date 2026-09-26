@@ -248,8 +248,30 @@ OpenRouter (which does enforce real keys) to observe a genuine 401 and confirm
 the no-retry path end-to-end.
 
 
+## Eval results
+Date: 2026-09-26
+Prompt version: triage-v1
+Result: 8/8 matched (100%)
 
+Note: this is a small, hand-picked eval set (8 cases) meant to catch obvious
+regressions when the prompt changes — a 100% pass rate here reflects strong
+performance on these specific cases, not a guarantee of correctness on the
+full range of real-world inputs. See evals/cases.json and evals/run_eval.py
+to reproduce.
 
+## Cost log (sample)
+{"prompt_version": "triage-v1", "model": "gemma3:1b", "input_tokens": 493, "output_tokens": 50, "duration_ms": 19898.83, "needed_repair": false}
 
+Our provider (local Ollama) is free, so this specific setup costs $0 regardless
+of volume. For reference, if run against a small hosted model priced around
+$0.15/1M input tokens and $0.60/1M output tokens: at 10,000 requests/day
+(4.93M input tokens + 500K output tokens), the estimated cost would be
+roughly $1.04/day (~$31/month).
+
+## What I'd fix with another day
+Our local provider (Ollama) doesn't enforce API key validation, so we
+couldn't observe a real 401 to confirm the "never retry on 401" behavior
+end-to-end — only by code inspection. With another day, I'd temporarily
+test against a hosted provider like OpenRouter to verify that path for real.
 
 

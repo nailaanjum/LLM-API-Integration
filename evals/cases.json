@@ -1,0 +1,36 @@
+[
+  {
+    "input": "I was charged twice for my subscription this month.",
+    "expected_category": "billing"
+  },
+  {
+    "input": "The app crashes every time I try to upload a file.",
+    "expected_category": "bug"
+  },
+  {
+    "input": "Can you add dark mode to the dashboard? Would love that.",
+    "expected_category": "feature"
+  },
+  {
+    "input": "Please cancel my account immediately, I don't want to pay anymore.",
+    "expected_category": "billing"
+  },
+  {
+    "input": "The export button does nothing when I click it on Safari.",
+    "expected_category": "bug"
+  },
+  {
+    "input": "It would be great if I could bulk-import contacts from a CSV.",
+    "expected_category": "feature"
+  },
+  {
+    "input": "Something is wrong with my account.",
+    "expected_category": "other",
+    "note": "ambiguous case — too vague to place confidently"
+  },
+  {
+    "input": "asdkjhaskjdh",
+    "expected_category": "other",
+    "note": "should hit the when-unsure rule — nonsense input, low confidence expected"
+  }
+]
